@@ -1,7 +1,7 @@
 IncrementFu
 ===============
 
-It provides the usefull methods for increment or decrement.
+It provides the useful methods for increment or decrement.
 
 Example
 =======
