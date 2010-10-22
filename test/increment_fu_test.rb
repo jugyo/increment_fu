@@ -92,12 +92,12 @@ class IncrementFuTest < ActiveSupport::TestCase
     end
   end
 
-  test 'max_baz' do
+  test 'max_baz_value' do
     foo = create_foo
-    assert_equal(foo.bar + 10, foo.max_baz)
+    assert_equal(foo.bar + 10, foo.max_baz_value)
 
     foo = create_foo(:bar => 10)
-    assert_equal(foo.bar + 10, foo.max_baz)
+    assert_equal(foo.bar + 10, foo.max_baz_value)
   end
 
   test 'increment with a max using lambda' do
@@ -108,14 +108,14 @@ class IncrementFuTest < ActiveSupport::TestCase
     assert_equal(1, foo.baz)
 
     foo = create_foo
-    assert_equal(foo.bar + 10, foo.max_baz)
-    foo.increment_baz(foo.max_baz + 1)
-    assert_equal(foo.max_baz, foo.baz)
+    assert_equal(foo.bar + 10, foo.max_baz_value)
+    foo.increment_baz(foo.max_baz_value + 1)
+    assert_equal(foo.max_baz_value, foo.baz)
 
     foo = Foo.create(:bar => 10)
-    assert_equal(foo.bar + 10, foo.max_baz)
-    foo.increment_baz(foo.max_baz + 1)
-    assert_equal(foo.max_baz, foo.baz)
+    assert_equal(foo.bar + 10, foo.max_baz_value)
+    foo.increment_baz(foo.max_baz_value + 1)
+    assert_equal(foo.max_baz_value, foo.baz)
   end
 
   #
@@ -186,12 +186,12 @@ class IncrementFuTest < ActiveSupport::TestCase
     end
   end
 
-  test 'min_baz' do
+  test 'min_baz_value' do
     foo = create_foo(:bar => 10)
-    assert_equal(foo.bar - 10, foo.min_baz)
+    assert_equal(foo.bar - 10, foo.min_baz_value)
 
     foo = create_foo(:bar => 10)
-    assert_equal(foo.bar - 10, foo.min_baz)
+    assert_equal(foo.bar - 10, foo.min_baz_value)
   end
 
   test 'decrement with a max using lambda' do
@@ -202,14 +202,14 @@ class IncrementFuTest < ActiveSupport::TestCase
     assert_equal(9, foo.baz)
 
     foo = create_foo
-    assert_equal(foo.bar - 10, foo.min_baz)
-    foo.decrement_baz(foo.max_baz + 1)
-    assert_equal(foo.min_baz, foo.baz)
+    assert_equal(foo.bar - 10, foo.min_baz_value)
+    foo.decrement_baz(foo.max_baz_value + 1)
+    assert_equal(foo.min_baz_value, foo.baz)
 
     foo = Foo.create(:bar => 10)
-    assert_equal(foo.bar - 10, foo.min_baz)
-    foo.decrement_baz(foo.max_baz + 1)
-    assert_equal(foo.min_baz, foo.baz)
+    assert_equal(foo.bar - 10, foo.min_baz_value)
+    foo.decrement_baz(foo.max_baz_value + 1)
+    assert_equal(foo.min_baz_value, foo.baz)
   end
 
   #
@@ -218,7 +218,7 @@ class IncrementFuTest < ActiveSupport::TestCase
 
   test 'validates of max value' do
     foo = create_foo
-    foo.bar = foo.max_bar
+    foo.bar = foo.max_bar_value
     assert foo.valid?
     foo.bar += 1
     assert !foo.valid?
@@ -227,7 +227,7 @@ class IncrementFuTest < ActiveSupport::TestCase
 
   test 'validates of min value' do
     foo = create_foo
-    foo.bar = foo.min_bar
+    foo.bar = foo.min_bar_value
     assert foo.valid?
     foo.bar -= 1
     assert !foo.valid?
