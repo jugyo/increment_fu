@@ -212,6 +212,28 @@ class IncrementFuTest < ActiveSupport::TestCase
     assert_equal(foo.min_baz, foo.baz)
   end
 
+  #
+  # validation
+  #
+
+  test 'validates of max value' do
+    foo = create_foo
+    foo.bar = foo.max_bar
+    assert foo.valid?
+    foo.bar += 1
+    assert !foo.valid?
+    assert foo.errors.invalid?(:bar)
+  end
+
+  test 'validates of min value' do
+    foo = create_foo
+    foo.bar = foo.min_bar
+    assert foo.valid?
+    foo.bar -= 1
+    assert !foo.valid?
+    assert foo.errors.invalid?(:bar)
+  end
+
   def create_foo(params = {})
     params = {:bar => 0, :baz => 0, :zab => 0}.merge(params)
     Foo.create!(params)

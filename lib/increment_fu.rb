@@ -56,6 +56,21 @@ module IncrementFu
         end
       end
     end
+
+    #
+    # validation
+    #
+
+    validate do |record|
+      next unless record[attribute]
+
+      value = record[attribute]
+      max_value = record.send(:"max_#{attribute}")
+      min_value = record.send(:"min_#{attribute}")
+
+      record.errors.add(attribute, "#{attribute} must be less than or equal to #{max_value}: #{value}") unless max_value.nil? || value <= max_value
+      record.errors.add(attribute, "#{attribute} must be greater than or equal to #{min_value}: #{value}") unless min_value.nil? || value >= min_value
+    end
   end
 end
 
