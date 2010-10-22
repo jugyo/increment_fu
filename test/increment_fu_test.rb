@@ -4,12 +4,14 @@ ActiveRecord::Schema.define do
   create_table :foos, :force => true do |table|
     table.integer  :bar
     table.integer  :baz
+    table.integer  :zab
   end
 end
 
 class Foo < ActiveRecord::Base
   increment_fu :bar, :min => 0, :max => 10
   increment_fu :baz, :min => lambda { |f| f.bar - 10 }, :max => lambda { |f| f.bar + 10 }
+  increment_fu :zab, :max => 10
 end
 
 class IncrementFuTest < ActiveSupport::TestCase
@@ -19,13 +21,21 @@ class IncrementFuTest < ActiveSupport::TestCase
   #
 
   test 'increment' do
+    # bar
     foo = create_foo
     old_value = foo.bar
-
     foo.increment_bar
     assert_equal(old_value + 1, foo.bar)
     foo.reload
     assert_equal(old_value, foo.bar)
+
+    # zab
+    foo = create_foo
+    old_value = foo.zab
+    foo.increment_zab
+    assert_equal(old_value + 1, foo.zab)
+    foo.reload
+    assert_equal(old_value, foo.zab)
   end
 
   test 'increment(by)' do
@@ -63,6 +73,10 @@ class IncrementFuTest < ActiveSupport::TestCase
       foo = create_foo
       foo.increment_bar(by)
       assert_equal(expected, foo.bar)
+
+      foo = create_foo
+      foo.increment_zab(by)
+      assert_equal(expected, foo.zab)
     end
   end
 
@@ -71,6 +85,10 @@ class IncrementFuTest < ActiveSupport::TestCase
       foo = create_foo
       foo.increment_bar!(by)
       assert_equal(expected, foo.bar)
+
+      foo = create_foo
+      foo.increment_zab!(by)
+      assert_equal(expected, foo.zab)
     end
   end
 
@@ -160,6 +178,14 @@ class IncrementFuTest < ActiveSupport::TestCase
     end
   end
 
+  test 'decrement attribute which is not specified an option min' do
+    {9 => 1, 10 => 0, 11 => -1}.each do |by, expected|
+      foo = create_foo(:zab => 10)
+      foo.decrement_zab!(by)
+      assert_equal(expected, foo.zab)
+    end
+  end
+
   test 'min_baz' do
     foo = create_foo(:bar => 10)
     assert_equal(foo.bar - 10, foo.min_baz)
@@ -187,7 +213,7 @@ class IncrementFuTest < ActiveSupport::TestCase
   end
 
   def create_foo(params = {})
-    params = {:bar => 0, :baz => 0}.merge(params)
+    params = {:bar => 0, :baz => 0, :zab => 0}.merge(params)
     Foo.create!(params)
   end
 end
