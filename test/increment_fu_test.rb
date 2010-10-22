@@ -234,8 +234,20 @@ class IncrementFuTest < ActiveSupport::TestCase
     assert foo.errors.invalid?(:bar)
   end
 
-  def create_foo(params = {})
+  test 'of validates_numericality_of' do
+    foo = build_foo(:zab => nil)
+    assert foo.valid?
+
+    foo = build_foo(:zab => 0.1)
+    assert !foo.valid?
+  end
+
+  def build_foo(params = {})
     params = {:bar => 0, :baz => 0, :zab => 0}.merge(params)
-    Foo.create!(params)
+    Foo.new(params)
+  end
+
+  def create_foo(*args)
+    build_foo(*args).tap { |foo| foo.save! }
   end
 end

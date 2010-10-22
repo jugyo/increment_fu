@@ -61,6 +61,8 @@ module IncrementFu
     # validation
     #
 
+    validates_numericality_of attribute, :only_integer => true, :allow_nil => true
+
     validate do |record|
       next unless record[attribute]
 
